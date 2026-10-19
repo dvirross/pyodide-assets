@@ -11,10 +11,10 @@ The widget on dvirross.com loads `pyodide.dvirross.com/<version>/...` only when 
 
 ## Contents and how it was built
 
-`v314.0.7/` is Pyodide 314.0.7 (Python 3.14, official release) with only these packages and their dependencies: `numpy`, `pandas`, `matplotlib`, `scipy`. It was produced with:
+`v314.0.7/` is Pyodide 314.0.7 (Python 3.14, official release) with only these packages and their dependencies: `numpy`, `pandas`, `matplotlib`, `scipy`, `sympy`. It was produced with:
 
 ```
-python3 scripts/build-subset.py <extracted pyodide-314.0.7 release>/pyodide 314.0.7 numpy pandas matplotlib scipy
+python3 scripts/build-subset.py <extracted pyodide-314.0.7 release>/pyodide 314.0.7 numpy pandas matplotlib scipy sympy
 ```
 
 The script copies the core files and the wheels unchanged and prunes `pyodide-lock.json` to the chosen packages. To upgrade, run it for the new version into a new `v<version>/` folder and point the site at it; old versions can stay so cached pages keep working.
