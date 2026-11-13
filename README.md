@@ -30,3 +30,16 @@ python3 scripts/add-pypi-wheel.py v314.0.7 pony 0.7.20 pony
 ```
 
 Checked in Pyodide 314.0.7 itself (Node, `loadPackagesFromImports`): `from pony.orm import *` loads the wheel, and a `Database` with an entity class, `select(d for d in Day if ...)`, `.sum()` and `max(...)` run on the in-memory `sqlite3` of Pyodide. Python code in a page loads it automatically when it contains `from pony.orm import *` or `import pony`.
+
+## Beautiful Soup and requests (2026-11-13)
+
+`beautifulsoup4` 4.15.0 (MIT), `soupsieve` 4.1 (MIT), `typing_extensions` 4.16.0 (PSF-2.0), `requests` 2.34.2 (Apache-2.0), `urllib3` 2.8.0 (MIT), `idna` 3.20 (BSD-3-Clause), `certifi` 2026.10.23 (MPL-2.0) and `charset-normalizer` 3.5.2 (MIT) were added for the data-collection lessons (together about 690 KB, loaded only when a lesson box imports them). All are pure-Python `py3-none-any` wheels, copied unchanged with their license files. They were produced with:
+
+```
+python3 scripts/add-pypi-wheel.py v314.0.7 beautifulsoup4 "" bs4
+python3 scripts/add-pypi-wheel.py v314.0.7 requests
+```
+
+`scripts/add-pypi-wheel.py` now also accepts a wheel that has dependencies: it reads `Requires-Dist` (skipping extras and markers that do not hold for Pyodide's Python), reuses a hosted package whose version satisfies the requirement, otherwise adds the newest release with a pure-Python wheel, writes `depends` into the lock file and takes the import names from the wheel (`top_level.txt`) unless given. With `loadPackagesFromImports`, `from bs4 import BeautifulSoup` loads `beautifulsoup4`, `soupsieve` and `typing_extensions`; `import requests` loads `requests`, `urllib3`, `idna`, `certifi` and `charset-normalizer`.
+
+Checked in the real worker of dvirross.com (Chromium, the site's Content-Security-Policy): `requests.get` of a same-origin page works without `pyodide-http` (urllib3 2.x talks to the browser's XMLHttpRequest from the worker), `BeautifulSoup(html, "html.parser")`, `find_all`, `class_`, `get` and `select` work. The pages of other origins are blocked by the site's `connect-src`, by design. The 17 packages hosted before are byte-for-byte unchanged (the lock-file entries are identical).
