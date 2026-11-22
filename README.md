@@ -43,3 +43,13 @@ python3 scripts/add-pypi-wheel.py v314.0.7 requests
 `scripts/add-pypi-wheel.py` now also accepts a wheel that has dependencies: it reads `Requires-Dist` (skipping extras and markers that do not hold for Pyodide's Python), reuses a hosted package whose version satisfies the requirement, otherwise adds the newest release with a pure-Python wheel, writes `depends` into the lock file and takes the import names from the wheel (`top_level.txt`) unless given. With `loadPackagesFromImports`, `from bs4 import BeautifulSoup` loads `beautifulsoup4`, `soupsieve` and `typing_extensions`; `import requests` loads `requests`, `urllib3`, `idna`, `certifi` and `charset-normalizer`.
 
 Checked in the real worker of dvirross.com (Chromium, the site's Content-Security-Policy): `requests.get` of a same-origin page works without `pyodide-http` (urllib3 2.x talks to the browser's XMLHttpRequest from the worker), `BeautifulSoup(html, "html.parser")`, `find_all`, `class_`, `get` and `select` work. The pages of other origins are blocked by the site's `connect-src`, by design. The 17 packages hosted before are byte-for-byte unchanged (the lock-file entries are identical).
+
+## wikipedia-api (added 2026-11-22)
+
+`wikipedia-api` 0.16.0 (MIT) and its pure-Python dependencies `httpx` 0.28.1 (BSD-3-Clause), `httpcore` 1.0.9 (BSD-3-Clause), `h11` 0.16.0 (MIT), `anyio` 4.16.0 (MIT), `click` 8.5.0 (BSD-3-Clause) and `tenacity` 9.1.4 (Apache-2.0) were added for the data-collection API lesson (about 594 KB, loaded only when a box imports `wikipediaapi`). `idna`, `certifi` and `typing_extensions` were already hosted. Produced with:
+
+```
+python3 scripts/add-pypi-wheel.py v314.0.7 wikipedia-api 0.16.0 wikipediaapi
+```
+
+The site answers the library's requests from saved Wikipedia answers (the page's `connect-src` blocks other origins); the wheels themselves are unchanged copies from PyPI.
